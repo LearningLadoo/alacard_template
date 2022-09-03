@@ -31,7 +31,7 @@ late CardData _cardData ;
 late bool _isBusiness;
 late ThemeData themeData;
 late String _path;
-
+bool isGridOn = true;
 final _tempKey = GlobalKey<ScaffoldState>();
 
 @override
@@ -78,6 +78,29 @@ Widget build(BuildContext context) {
                           child: Stack(
                             children: [
                               finalGraphics(themeData),
+                              // grid
+                              if(isGridOn)Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(width: 1,color: Colors.grey.shade700.withOpacity(0.0),),
+                                  Container(width: 1,color: Colors.grey.shade700.withOpacity(0.5),),
+                                  Container(width: 1,color: Colors.grey.shade700.withOpacity(0.5),),
+                                  Container(width: 1,color: Colors.grey.shade700.withOpacity(0.5),),
+                                  Container(width: 1,color: Colors.grey.shade700.withOpacity(0.5),),
+                                  Container(width: 1,color: Colors.grey.shade700.withOpacity(0.0),),
+                                ],
+                              ),
+                              if(isGridOn)Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(height: 1,color: Colors.grey.shade700.withOpacity(0.0),),
+                                  Container(height: 1,color: Colors.grey.shade700.withOpacity(0.5),),
+                                  Container(height: 1,color: Colors.grey.shade700.withOpacity(0.5),),
+                                  Container(height: 1,color: Colors.grey.shade700.withOpacity(0.5),),
+                                  Container(height: 1,color: Colors.grey.shade700.withOpacity(0.5),),
+                                  Container(height: 1,color: Colors.grey.shade700.withOpacity(0.0),),
+                                ],
+                              ),
                               // editing buttons on right
                               editableCardWidget(),
                             ],
@@ -155,6 +178,25 @@ Widget editableCardWidget(){
                     height: large-small,
                     width: large -small,
                     icon: Icons.edit_rounded),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top:8),
+              child: EmbossBg(
+                large-small,
+                large-small,
+                themeData: themeData,
+                depth: 5,
+                child: ButtonType2(
+                    themeData: themeData,
+                    onPressed: () {
+                      setState(() {
+                        isGridOn = !isGridOn;
+                      });
+                    },
+                    height: large-small,
+                    width: large -small,
+                    icon: Icons.grid_4x4_rounded),
               ),
             ),
         ],
