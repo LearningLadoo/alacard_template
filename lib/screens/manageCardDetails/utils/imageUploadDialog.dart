@@ -5,6 +5,7 @@ import 'package:alacard_template/database/cardData.dart';
 import 'package:alacard_template/functions.dart';
 import 'package:alacard_template/providers/variables.dart';
 import 'package:alacard_template/utils/common/buttons.dart';
+import 'package:alacard_template/utils/template/chooseTemplates.dart';
 import 'package:alacard_template/utils/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,22 +102,26 @@ class _ImageUploadDialogState extends State<ImageUploadDialog> {
               ),
             ],
           ),
-          // todo visible when templates are available
-          // if(isMine)
-          //   OrDivider(themeData),
-          // if(isMine) Spacing().smallWiget,
-          // if(isMine)
-          //   ButtonType3(
-          //     height: medium*1.2,
-          //     width: large*2.7,
-          //     text: " Use Template",
-          //     offset: 0,
-          //     themeData: themeData,
-          //     isbnw: true,
-          //     bgColor: themeData.colorScheme.onPrimary,
-          //     onPressed: () async {
-          //     },
-          //   ),
+          if(isMine)
+            OrDivider(themeData),
+          if(isMine) Spacing().smallWiget,
+          if(isMine)
+            ButtonType3(
+              height: medium*1.2,
+              width: large*2.7,
+              text: " Use Template",
+              offset: 0,
+              themeData: themeData,
+              isbnw: true,
+              bgColor: themeData.colorScheme.onPrimary,
+              onPressed: () async {
+                // open another pop up with all the templates
+                AlacardDialog(
+                  context,
+                  child: ChooseTemplates(),
+                );
+              },
+            ),
           OrDivider(themeData),
           Spacing().smallWiget,
           ButtonType3(

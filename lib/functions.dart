@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
@@ -354,13 +355,13 @@ void askForStoragePermission(BuildContext context)async{
 }
 void gettingLocalPath() async {
   // getting location where all the data of app is stored
-  final d = await getApplicationDocumentsDirectory(); /// use getExternal directory for debugging and application doc dir for deployment, idk why await Permission.storage.isGranted was given before accessing directory
-  localPath = d.path;
+  final d = await getExternalStorageDirectory(); /// use getExternal directory for debugging and application doc dir for deployment, idk why await Permission.storage.isGranted was given before accessing directory
+  localPath = d!.path;
 }
 Future<void> gettingLocalPathh() async {
   // getting location where all the data of app is stored
-  final d = await getApplicationDocumentsDirectory();
-  localPath = d.path;
+  final d = await getExternalStorageDirectory();
+  localPath = d!.path;
   print("k k $localPath");
 }
 Future<void> getImage(BuildContext context, CardFace? cardFace,{required String source , bool isMine = false}) async {
@@ -454,6 +455,25 @@ Future<void> getImage(BuildContext context, CardFace? cardFace,{required String 
 
     // setting up variable
     p_testImage = FileImage(File(newPath));
+    // add the config file
+    if(p_imageAsTemplateCode!=null){
+      Map<String, dynamic>? _map = {
+        "tempCode":p_imageAsTemplateCode,
+        "source": "personal",
+        "templateType": "jpg",
+        "editable": true,
+        "front": {
+          "email": {
+            "position": [0.5, 0.5],
+            "lol":{}
+          },
+          "lol":"lol"
+          ,},
+        "back": {},
+      };
+      String _path = getTemplateLocalPath(tempSubPath: getTemplateSubPath(cardData: Provider.of<Variables>(context,listen: false).tempCardDetails , forLocal: true , code : p_imageAsTemplateCode)! , fileName:"config1",key: "config" );
+      File(_path).writeAsStringSync(json.encode(_map));
+    }
     //stop loader
     progress.dismiss();
     //now notify that image get is successful

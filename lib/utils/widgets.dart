@@ -70,7 +70,7 @@ AppBar AlacardAppBar(BuildContext context,{bool displayBack = false,bool display
         //         builder: (BuildContext context) => Dashboard(),
         //       ));
         /// restartApp deletes all the previous routes
-        if(restartApp)Navigator.pushAndRemoveUntil(context??bc_currContext??context,MaterialPageRoute(builder: (BuildContext context) => MainApp()),(Route<dynamic> route) => false);
+        if(restartApp)Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (BuildContext context) => MainApp()),(Route<dynamic> route) => false);
         // askBeforeExiting shows an exit dialog
         else if(askBeforeExiting && !restartApp)AlacardDialog(context, child: ExitDialog(context),barrierOpacity: 0.5);
         // pop

@@ -21,7 +21,7 @@ late BuildContext bc_alacardDialogContext;
 late BuildContext bc_showCardContext;
 
 SqlManager p_sqlManager = SqlManager();
-String? p_imageAsTemplateCode; // this contains the code for image as a template type, this is initialized when the checkbox is made true
+String? p_imageAsTemplateCode; // this contains the code for image as a template type, this is initialized when the checkbox is made true and when use an inbuilt template is clicked (in-jpg-1)
 late dynamic p_progressHud; // dashboard, received card handeler,
 int p_cardsToBeAdded = 0;
 int p_cardsAdded = 0;

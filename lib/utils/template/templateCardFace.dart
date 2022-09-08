@@ -249,6 +249,7 @@ Widget getPictureWidget(){
   }
 }
 Future<UI.Image?> loadUiImage() async {
+  print("yhe kk - ${Provider.of<Variables>(context,listen: false).tempCardDetails.getMapFromCardData()}");
   _path = getTemplateLocalPath(tempSubPath: getTemplateSubPath(cardData: Provider.of<Variables>(context,listen: false).tempCardDetails , forLocal: true , code : p_imageAsTemplateCode??_cardData.templateName!["tempCode"])! , fileName:CardFace.front.name,key: "jpg" );
   final Completer<UI.Image?> completer = Completer();
   try {

@@ -45,7 +45,7 @@ class MainApp extends StatelessWidget {
 
   Future setupInitialVariables(BuildContext context)async{
     p_textScale_ratio = MediaQuery.of(context).textScaleFactor;
-    log("ratioo - $p_textScale_ratio");
+    log("keys - $p_textScale_ratio");
     if(p_textScale_ratio!>1.0){
       p_textLimit_Ratio = 1.0/p_textScale_ratio!;
       p_textScale_ratio = 1.0;

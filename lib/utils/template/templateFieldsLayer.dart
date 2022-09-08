@@ -169,10 +169,7 @@ class _TemplateFieldsLayerState extends State<TemplateFieldsLayer> {
     if(p_imageAsTemplateCode!=null) {
       // if the card is not template
       _defaultMap.addAll({"tempCode":p_imageAsTemplateCode});
-      cardData.templateName = _defaultMap;
-      logger.i(cardData.getMapFromCardData());
-      Provider.of<TemplateData>(context,listen: false).updateMyCardTempData(cardData);
-      return _defaultMap;
+      // return _defaultMap;
     }
     // check if the config1 file exists in local image path
     if (File("$pathMyCards/config1.json").existsSync()) {
@@ -191,7 +188,10 @@ class _TemplateFieldsLayerState extends State<TemplateFieldsLayer> {
       logger.e("unable to get positions map");
     }
     // _map!["front"]["title"]["fontStyle"]["size"] = 20;
-    logger.i(_map);
+    print("mmom $_map");
+    cardData.templateName = _map;
+    logger.i(cardData.getMapFromCardData());
+    Provider.of<TemplateData>(context,listen: false).updateMyCardTempData(cardData);
     return _map;
   }
 }

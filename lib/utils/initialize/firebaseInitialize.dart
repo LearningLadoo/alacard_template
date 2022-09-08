@@ -3,9 +3,11 @@ import 'package:alacard_template/constants.dart';
 import 'package:alacard_template/database/databaseHelper.dart';
 import 'package:alacard_template/database/sharedPrefsOfUser.dart';
 import 'package:alacard_template/database/sharingPreferences.dart';
+import 'package:alacard_template/firebase_options.dart';
 import 'package:alacard_template/providers/variables.dart';
 import 'package:alacard_template/screens/fullScreenLoading.dart';
 import 'package:alacard_template/screens/myCards/myCards.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 class FirebaseAppInitialize extends StatefulWidget {
@@ -16,6 +18,9 @@ class FirebaseAppInitialize extends StatefulWidget {
 class _FirebaseAppInitializeState extends State<FirebaseAppInitialize> {
   Future<bool> _initialization() async{
    WidgetsFlutterBinding.ensureInitialized();
+   await Firebase.initializeApp(
+     options: DefaultFirebaseOptions.currentPlatform,
+   );
    return await initializeVariables();
 
  }
