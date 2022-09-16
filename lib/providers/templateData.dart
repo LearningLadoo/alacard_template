@@ -30,9 +30,9 @@ class TemplateData extends ChangeNotifier {
 
   List<String>? get displayList =>_displayList!=null?List<String>.from(_displayList!):null;
 
-  updateMyCardTempData(CardData? newValue){
+  updateMyCardTempData(CardData? newValue,{bool wannaNotify = false}){
     _myCardTempData = newValue;
-    // notifyListeners();
+    if(wannaNotify)notifyListeners();
   }
   updateFontStyle(String fieldName,Map<String,dynamic> newValue) {
     if(_myCardTempData!.templateName!["front"][fieldName]==null){

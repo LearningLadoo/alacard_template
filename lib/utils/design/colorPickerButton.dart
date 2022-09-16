@@ -10,7 +10,8 @@ class ColorPickerButton extends StatefulWidget {
   Color initialColor;
   double height;
   Function onSelect;
-  ColorPickerButton(this.height,this.initialColor,this.onSelect,);
+  String? title;
+  ColorPickerButton({required this.height,required this.initialColor,required this.onSelect,this.title});
   @override
   _ColorPickerButtonState createState() => _ColorPickerButtonState();
 }
@@ -88,13 +89,13 @@ class _ColorPickerButtonState extends State<ColorPickerButton> {
               color: darkColor,
               borderRadius: BorderRadius.circular(small)),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: tiny),
+            padding: EdgeInsets.symmetric(horizontal: widget.title==""?0.0:tiny),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text("Font Colour",style: themeData.textTheme.subtitle2),
+                Text(widget.title??"Font Colour",style: themeData.textTheme.subtitle2),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal:tiny),
+                  margin: EdgeInsets.symmetric(horizontal: tiny),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(small*0.7),
                     color:color,

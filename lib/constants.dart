@@ -130,7 +130,7 @@ Map<String, List<dynamic>> socialTypeDetails = {
 // Map<String, List>? ;
 ImageProvider? p_testImage;
 String? localPath;
-UI.Image? p_templateImage ;
+UI.Image? p_templateImage ; // this is used to provide the image to convert to final card
 Map<String,dynamic> p_templateMap = {}; // this handles the structure and style of font on card
 SharedPrefsOfUser p_SharedPrefs = SharedPrefsOfUser(); // similar as prefs saved in sql
 GlobalKey? frontKey ;

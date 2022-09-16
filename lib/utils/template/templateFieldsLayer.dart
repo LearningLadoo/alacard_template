@@ -39,6 +39,8 @@ class _TemplateFieldsLayerState extends State<TemplateFieldsLayer> {
       positions = positions[cardFace.name]??{};
       p_templateMap = positions!;
       displayList = positions.keys.toList();// removing all the elements in display list
+      // removes colors if present
+      displayList.remove("colors");
       Provider.of<TemplateData>(context,listen: false).updateDisplayList(CRUD.update, newValues: displayList,notify: false);
     }
     logger.i("kinemon ${cardFace.name} $positions");

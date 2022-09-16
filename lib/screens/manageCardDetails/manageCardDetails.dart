@@ -487,15 +487,19 @@ class _ManageCardDetailsState extends State<ManageCardDetails> {
                                   logger.e("all providers are as tempCardDetails ${_tempCardProvider.tempCardDetails.getMapFromCardData()}");
                                   String pathMyCards = getCardImagePath(cardName: _cardData.cardName , isMine: true);
                                   bool isUpdatedTemp = false;
+                                  print("opopo $pathMyCards");
+
                                   if (File("$pathMyCards/config1.json").existsSync()){
                                     // check if data is same to mark updated
                                     Map<String, dynamic> _map = json.decode(File("$pathMyCards/config1.json").readAsStringSync());
                                     isUpdatedTemp = _cardData.templateName!["front"].toString()!=_map["front"].toString();
+                                    print("opop $isUpdatedTemp ${_cardData.templateName!["front"].toString()} && ${_map["front"].toString()}");
                                   } else {
                                     // mark is updated
                                     isUpdatedTemp = true;
                                   }
-                                  if(isUpdatedTemp){
+                                  print("opopo $isUpdatedTemp");
+                                  if(true){
                                     // make canvas to image in temp folder
                                     bool isSuccess = await templateToImage();
                                     if(!isSuccess){

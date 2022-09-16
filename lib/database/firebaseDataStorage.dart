@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' show post, get;
@@ -15,6 +14,7 @@ class FirebaseDataStorage {
   // get template names
  Future<List<Map>> getTemplateNames() async{
    List<Map> _maps = [];
+   Map<String,List<String>> _tags = {};
    for (String i in ["jpg","svg"]) {
      try {
           await _firestore.collection("templates/yunHi/"+i).get().then((value){
@@ -23,37 +23,13 @@ class FirebaseDataStorage {
                 "type":i,
                 "id":element.id,
                 "tokens":element.data()["tokens"],
+                "about":element.data()["about"],
+                "createdBy":element.data()["createdBy"]
               };
-              print(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
-              _maps.add(_m);
+              for(String i in element.data()["tags"]){
+                _tags.update(i, (value) {value.add(element.id); return value; }, ifAbsent: () => [element.id]);
+              }
+              print("$_m \n $_tags");
               _maps.add(_m);
             });
           });
@@ -61,10 +37,13 @@ class FirebaseDataStorage {
           print(e);
         }
    }
+   _maps.add(_tags);
    return _maps;
  }
  Image ctd_getSampleTemplate(String templateSubPath,String token){
-   return Image.network("$_firebaseStoragePath/${templateSubPath.replaceAll("/","%2F")}%2Fsample?alt=media&token="+token);
+   return Image.network(
+       "$_firebaseStoragePath/${templateSubPath.replaceAll("/","%2F")}%2Fsample?alt=media&token="+token,
+   );
  }
   Future<bool> ctd_getTemplateDetails(CardData _card) async{
     try {

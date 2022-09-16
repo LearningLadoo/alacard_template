@@ -116,10 +116,7 @@ class _ImageUploadDialogState extends State<ImageUploadDialog> {
               bgColor: themeData.colorScheme.onPrimary,
               onPressed: () async {
                 // open another pop up with all the templates
-                AlacardDialog(
-                  context,
-                  child: ChooseTemplates(),
-                );
+                openBottomSheet(context, ChooseTemplates());
               },
             ),
           OrDivider(themeData),

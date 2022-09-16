@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as UI;
 import 'dart:typed_data';
@@ -33,6 +34,9 @@ late ThemeData themeData;
 late String _path;
 bool isGridOn = true;
 final _tempKey = GlobalKey<ScaffoldState>();
+Widget? pictureWidget; // saves p_templateImage in the form of Image instead of UI.image
+String? svgString; // the string of svg image so that we can replace colors to required colors
+Map<String,dynamic>? oldColors; // old colors is used to compare the colors with tempCardData, if there is change then it is updated to current colors
 
 @override
   void initState() {
@@ -54,6 +58,7 @@ Widget build(BuildContext context) {
   } catch (e) {
     logger.e(e);
   }
+  reBuildTheBg();
     themeData = Theme.of(context);
     return OnWidgetLoader(
         themeData: themeData,
@@ -61,7 +66,6 @@ Widget build(BuildContext context) {
           return FutureBuilder(
               future: loadUiImage(),
               builder: (BuildContext context, AsyncSnapshot<UI.Image?> img) {
-                if(img.hasData&&img.data!=null)p_templateImage = img.data; // initializing so that it can be used later when save is pressed
                 double? ratio = (p_templateImage!=null)? p_templateImage!.height/p_templateImage!.width : 0.5;
                 if (img.hasData||width!=null) {
                   _ratio = ratio;
@@ -213,7 +217,11 @@ Widget finalGraphics(ThemeData themeData){
       child: Stack(
         children: [
           // background image
-          getPictureWidget(),
+          SizedBox(
+            height: height,
+            width: width,
+            child: pictureWidget,
+          ),
           // fields
           TemplateFieldsLayer(_cardData,isBusiness: _isBusiness,height: height,width: width!,)
         ],
@@ -221,48 +229,87 @@ Widget finalGraphics(ThemeData themeData){
     ),
   );
 }
-Widget getPictureWidget(){
+Future<UI.Image?> getPictureWidget() async{
   try {
-      logger.i("template type = ${_cardData.templateName!["templateType"]}");
       // display editable screen
       switch(_cardData.templateName!["templateType"]){
         case "svg" :
-        // get String of svg file
-          String svgString = File(_path).readAsStringSync();
-          svgString = svgString.replaceAll("color1", "#000000");
-          logger.i(svgString);
-          return SizedBox(
-              height: height,
-              width: width,
-              child: SvgPicture.string(svgString,height: height,)
-          );
+        // get String of svg file, this is the original svg string
+          svgString = File(_path).readAsStringSync();
+          // editing the colors, the key represents the original colors and if the value is "" then it will remain unchanged but if it is something then it will replace the key color from the svgString
+          if(oldColors!=null) {
+            for(String i in oldColors!.keys){
+              if(!(oldColors![i]==null || oldColors![i]=="") && oldColors![i]!=i) {
+                  svgString = svgString!.replaceAll(i, oldColors![i]);
+              }
+            }
+          }
+          // getting the height and width pixels from svgString
+          List<String> dimensions = svgString!.split("viewBox=\"0 0 ")[1].split("\"")[0].split(" ");
+          log("$dimensions \n $svgString");
+          // converting svg to UI.Image
+          final DrawableRoot svgRoot = await svg.fromSvgString(svgString!,svgString!);
+          final UI.Picture picture = svgRoot.toPicture();
+          final UI.Image image = await picture.toImage(int.parse(dimensions[0]),int.parse(dimensions[1]));
+          return image;
         case "jpg":
           logger.i("imagePath : "+_path);
-          return Image.memory(
-            Uint8List.fromList(File(_path).readAsBytesSync()),);
-        default: return(Center());
+          return await decodeImageFromList(File(_path).readAsBytesSync());
+        default: return null;
       }
   }
   catch(e){
     logger.e(e);
-    return(Center());
+    return null;
   }
 }
 Future<UI.Image?> loadUiImage() async {
-  print("yhe kk - ${Provider.of<Variables>(context,listen: false).tempCardDetails.getMapFromCardData()}");
-  _path = getTemplateLocalPath(tempSubPath: getTemplateSubPath(cardData: Provider.of<Variables>(context,listen: false).tempCardDetails , forLocal: true , code : p_imageAsTemplateCode??_cardData.templateName!["tempCode"])! , fileName:CardFace.front.name,key: "jpg" );
+  // updating the oldColors with the latest values
+  CardData tempCard = Provider.of<Variables>(context,listen: false).tempCardDetails;
+  oldColors = tempCard.templateName!["front"]["colors"];
+  log("yhe kk - ${_cardData.templateName!["tempCode"]} $oldColors ${tempCard.getMapFromCardData()}");
+  String key = "jpg";
+  String? code = p_imageAsTemplateCode??_cardData.templateName!["tempCode"];
+  // if the template is inbuilt then assigning the key to create sub-path
+  if(code!=null && code.startsWith("in-")){
+    key = code.split("-")[1];
+    _cardData.templateName!["templateType"] = key;
+    _cardData.templateName!["source"] = "personal"; // overwriting the source from inbuilt to personal because another copy will be saved in users Mytemplate folder
+  }
+  // setting up the path value of the bg image
+  _path = getTemplateLocalPath(tempSubPath: getTemplateSubPath(cardData: Provider.of<Variables>(context,listen: false).tempCardDetails , forLocal: true , code : code)!, fileName:CardFace.front.name,key: key );
   final Completer<UI.Image?> completer = Completer();
   try {
-    File imageFile = File(_path);
-    UI.Image image = await decodeImageFromList(imageFile.readAsBytesSync());
+    // this try catch handles the failure of assigning p_templateImage for the first time
+    try {
+      setState(() async{
+        p_templateImage = await getPictureWidget();
+      });
+    } catch (e) {
+      p_templateImage = await getPictureWidget();
+    }
+    // handle null
+    if(p_templateImage==null)return null;
+    // build the pictureWidget i.e the Image widget which is used to display as bg
+    pictureWidget = Image.memory(Uint8List.view((await p_templateImage!.toByteData(format: UI.ImageByteFormat.png))!.buffer));
+    UI.Image image = p_templateImage as UI.Image;
     completer.complete(image);
     print("gttt - $_path");
     return completer.future;
   } catch (e) {
-    logger.e(e);
+    // handling the error and returning null
     print("gttt e - $_path");
     completer.complete(null) ;
     return completer.future;
+  }
+}
+Future<void> reBuildTheBg()async{
+  String currColors = Provider.of<TemplateData>(context).myCardTempData!.templateName!["front"]["colors"].toString();
+  // check if to rebuilt or not, as the tempcard from provider changes then the condition is checked to whether update the bg image or not
+  if(oldColors!=null && oldColors.toString()!=currColors){
+    // load the bg image
+    print("successfully rebuilt the image");
+    await loadUiImage();
   }
 }
 }

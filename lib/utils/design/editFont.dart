@@ -79,15 +79,15 @@ class _EditFontState extends State<EditFont> {
                     font: _font,
                 ),
                 ColorPickerButton(
-                    medium*1.5,
-                    Color.fromRGBO(fontStyle["color"][0], fontStyle["color"][1], fontStyle["color"][2], fontStyle["color"][3]*1.0),
-                        (Color color){
-                            List<dynamic> _rgboList = [color.red,color.green,color.blue,color.opacity];
-                            setState(() {
-                              fontStyle["color"] = _rgboList;
-                            });
+                    height: medium*1.5,
+                    initialColor: Color.fromRGBO(fontStyle["color"][0], fontStyle["color"][1], fontStyle["color"][2], fontStyle["color"][3]*1.0),
+                    onSelect: (Color color){
+                      List<dynamic> _rgboList = [color.red,color.green,color.blue,color.opacity];
+                      setState(() {
+                        fontStyle["color"] = _rgboList;
+                      });
                 }),
-                 IncrementButton(
+                IncrementButton(
                      height:medium*1.5,
                      width:0,
                      value:fontStyle["size"]*1.0,

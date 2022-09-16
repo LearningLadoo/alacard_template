@@ -273,13 +273,20 @@ String? getTemplateSubPath({required CardData cardData ,bool forLocal = false , 
   String _tempCode = code ?? cardData.templateName!["tempCode"];
   _tempCode = _tempCode.replaceAll(unfinished,"");
   String _type = cardData.templateName!["templateType"];
+  print("helele $_tempCode");
+  // to handle newly added templates as the cardData is not made yet
+  if(_tempCode.startsWith("in-")){
+    _type = _tempCode.split("-")[1];
+    print("helele $_type");
+  }
   String _path = "templates/yunHi/$_type/$_tempCode";
+  // else by default the template will be jpg type
   switch(cardData.templateName!["source"]){
     case "business":
       String _bCode = getSeparatedKeys(cardData.businessCode!)[0];
       _path = "businesses/$_bCode/$_path";
       break;
-    case "inBuilt": _path = "$_path";
+    case "inbuilt": _path = "$_path";
     break;
     case "personal":
       String globalId = cardData.globalId!;
@@ -1074,4 +1081,15 @@ int getEpochForSort(CardData cardData){
   } else {
     return cardData.dateTimeUpdated!.millisecondsSinceEpoch;
   }
+}
+String colorToHex({required Color color, bool withAlpha = false,bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
+    '${withAlpha?color.alpha.toRadixString(16).padLeft(2, '0'):""}'
+    '${color.red.toRadixString(16).padLeft(2, '0')}'
+    '${color.green.toRadixString(16).padLeft(2, '0')}'
+    '${color.blue.toRadixString(16).padLeft(2, '0')}';
+Color ColorFromHex(String hexString) {
+final buffer = StringBuffer();
+if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+buffer.write(hexString);
+return Color(int.parse(buffer.toString(), radix: 16));
 }
