@@ -1082,14 +1082,3 @@ int getEpochForSort(CardData cardData){
     return cardData.dateTimeUpdated!.millisecondsSinceEpoch;
   }
 }
-String colorToHex({required Color color, bool withAlpha = false,bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
-    '${withAlpha?color.alpha.toRadixString(16).padLeft(2, '0'):""}'
-    '${color.red.toRadixString(16).padLeft(2, '0')}'
-    '${color.green.toRadixString(16).padLeft(2, '0')}'
-    '${color.blue.toRadixString(16).padLeft(2, '0')}';
-Color ColorFromHex(String hexString) {
-final buffer = StringBuffer();
-if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-buffer.write(hexString);
-return Color(int.parse(buffer.toString(), radix: 16));
-}

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:alacard_template/extensions.dart';
 import 'package:http/http.dart' show post, get;
 import 'package:alacard_template/constants.dart';
 import 'package:alacard_template/database/cardData.dart';
@@ -27,7 +28,7 @@ class FirebaseDataStorage {
                 "createdBy":element.data()["createdBy"]
               };
               for(String i in element.data()["tags"]){
-                _tags.update(i, (value) {value.add(element.id); return value; }, ifAbsent: () => [element.id]);
+                _tags.update(i.capitalizeFirstofEach, (value) {value.add(element.id); return value; }, ifAbsent: () => [element.id]);
               }
               print("$_m \n $_tags");
               _maps.add(_m);

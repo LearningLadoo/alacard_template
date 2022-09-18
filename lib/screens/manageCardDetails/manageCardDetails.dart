@@ -499,7 +499,7 @@ class _ManageCardDetailsState extends State<ManageCardDetails> {
                                     isUpdatedTemp = true;
                                   }
                                   print("opopo $isUpdatedTemp");
-                                  if(true){
+                                  if(isUpdatedTemp){
                                     // make canvas to image in temp folder
                                     bool isSuccess = await templateToImage();
                                     if(!isSuccess){

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:alacard_template/constants.dart';
 import 'package:alacard_template/database/cardData.dart';
+import 'package:alacard_template/extensions.dart';
 import 'package:alacard_template/functions.dart';
 import 'package:alacard_template/providers/templateData.dart';
 import 'package:alacard_template/providers/variables.dart';
@@ -56,10 +57,10 @@ class _EditTemplateState extends State<EditTemplate> {
                 if(hex=="")hex=k;
                 return ColorPickerButton(
                   height:large,
-                  initialColor: ColorFromHex(hex),
+                  initialColor: hex.colorFromHex,
                   onSelect: (Color chosenColor){
                     setState((){
-                      p_templateMap["colors"][k] = colorToHex(color: chosenColor,leadingHashSign: false);
+                      p_templateMap["colors"][k] = chosenColor.colorToHex(leadingHashSign: false);
                     });
                     cardData.templateName!["front"]["colors"]=p_templateMap["colors"];
                     _templateDataProviderNotListen.updateMyCardTempData(cardData,wannaNotify: true);},

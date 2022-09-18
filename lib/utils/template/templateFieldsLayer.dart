@@ -189,7 +189,6 @@ class _TemplateFieldsLayerState extends State<TemplateFieldsLayer> {
       }
       logger.e("unable to get positions map");
     }
-    // _map!["front"]["title"]["fontStyle"]["size"] = 20;
     print("mmom $_map");
     cardData.templateName = _map;
     logger.i(cardData.getMapFromCardData());
