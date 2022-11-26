@@ -361,6 +361,7 @@ class _ManageCardDetailsState extends State<ManageCardDetails> {
                           },
                           onEditingComplete: (value) {
                             _cardData.website = value;
+
                             _templateDataProvider.updateMyCardTempData(_cardData);
                             FocusScope.of(context).unfocus();
                           },
